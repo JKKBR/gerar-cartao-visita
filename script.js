@@ -29,14 +29,15 @@ function carregarLogo(inputId, imgId){
       reader.onload = () => {
         const img = document.getElementById(imgId);
         img.src = reader.result;
+        img.style.display = "block";
         salvarLocal();
       };
       reader.readAsDataURL(file);
     }
   });
 }
-carregarLogo("logo1","prevLogo1");
-carregarLogo("logo2","prevLogo2");
+carregarLogo("logo1","prevLogo1"); // frente
+carregarLogo("logo2","prevLogo2"); // verso
 
 // Função para tornar elementos arrastáveis
 function makeDraggable(el) {
@@ -50,7 +51,7 @@ function makeDraggable(el) {
     };
     document.onmouseup = function() {
       document.onmousemove = null;
-      salvarLocal(); // salva posição
+      salvarLocal();
     };
   };
 }
@@ -64,6 +65,8 @@ function salvarLocal() {
     profissao: document.getElementById("profissao").value,
     email: document.getElementById("email").value,
     telefone: document.getElementById("telefone").value,
+    fundoFrente: document.getElementById("frente").style.backgroundImage,
+    fundoVerso: document.getElementById("verso").style.backgroundImage,
     logo1: {
       src: document.getElementById("prevLogo1").src,
       left: document.getElementById("prevLogo1").style.left,
@@ -90,6 +93,9 @@ function carregarLocal() {
     document.getElementById("prevProfissao").textContent = dados.profissao || "";
     document.getElementById("prevEmail").textContent = dados.email || "";
     document.getElementById("prevTelefone").textContent = dados.telefone || "";
+
+    if(dados.fundoFrente) document.getElementById("frente").style.backgroundImage = dados.fundoFrente;
+    if(dados.fundoVerso) document.getElementById("verso").style.backgroundImage = dados.fundoVerso;
 
     if(dados.logo1){
       const l1 = document.getElementById("prevLogo1");
@@ -151,7 +157,7 @@ document.getElementById("btnImportTXT").addEventListener("change", e => {
 // Carregar dados ao abrir
 window.onload = carregarLocal;
 
-// Exportar PDF frente e verso
+// Exportar PDF frente e verso com fundo e logos
 document.getElementById("exportar").addEventListener("click", () => {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p", "mm", "a4");
@@ -174,14 +180,33 @@ document.getElementById("exportar").addEventListener("click", () => {
   const email = document.getElementById("email").value;
   const telefone = document.getElementById("telefone").value;
 
-  // --- Página 1: Frente ---
+  // Imagens
+  const fundoFrente = document.getElementById("frente").style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+  const fundoVerso = document.getElementById("verso").style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+  const logo1 = document.getElementById("prevLogo1");
+  const logo2 = document.getElementById("prevLogo2");
+
+    // --- Página 1: Frente ---
   for (let linha = 0; linha < linhas; linha++) {
     for (let coluna = 0; coluna < colunas; coluna++) {
       const x = margemEsq + coluna * larguraCartao;
       const y = margemTopo + linha * alturaCartao;
-      doc.rect(x, y, larguraCartao, alturaCartao);
+
+      // Fundo da frente
+      if (fundoFrente && fundoFrente !== "none") {
+        doc.addImage(fundoFrente, "PNG", x, y, larguraCartao, alturaCartao);
+      }
+
+      // Texto frente
       doc.text(nome, x + 10, y + 20);
       doc.text(profissao, x + 10, y + 30);
+
+      // Logo 1 (frente)
+      if (logo1.src) {
+        const posX = x + (parseInt(logo1.style.left) || 0);
+        const posY = y + (parseInt(logo1.style.top) || 0);
+        doc.addImage(logo1.src, "PNG", posX, posY, 20, 20);
+      }
     }
   }
 
@@ -191,11 +216,25 @@ document.getElementById("exportar").addEventListener("click", () => {
     for (let coluna = 0; coluna < colunas; coluna++) {
       const x = margemEsq + coluna * larguraCartao + offsetX;
       const y = margemTopo + linha * alturaCartao + offsetY;
-      doc.rect(x, y, larguraCartao, alturaCartao);
+
+      // Fundo do verso
+      if (fundoVerso && fundoVerso !== "none") {
+        doc.addImage(fundoVerso, "PNG", x, y, larguraCartao, alturaCartao);
+      }
+
+      // Texto verso
       doc.text(email, x + 10, y + 20);
       doc.text(telefone, x + 10, y + 30);
+
+      // Logo 2 (verso)
+      if (logo2.src) {
+        const posX = x + (parseInt(logo2.style.left) || 0);
+        const posY = y + (parseInt(logo2.style.top) || 0);
+        doc.addImage(logo2.src, "PNG", posX, posY, 20, 20);
+      }
     }
   }
 
+  // Salvar PDF
   doc.save("cartoes.pdf");
 });
