@@ -13,9 +13,16 @@
       <label>Profissão: <input type="text" id="profissao"></label>
       <label>Email: <input type="text" id="email"></label>
       <label>Telefone: <input type="text" id="telefone"></label>
+
+      <h3>Imagens</h3>
       <label>Imagem de Fundo: <input type="file" id="bg" accept="image/*"></label>
+      <button type="button" id="btnExcluirFundo">Excluir Fundo</button>
+
       <label>Logo Frente: <input type="file" id="logo1" accept="image/*"></label>
+      <button type="button" id="btnExcluirLogo1">Excluir Logo Frente</button>
+
       <label>Logo Verso: <input type="file" id="logo2" accept="image/*"></label>
+      <button type="button" id="btnExcluirLogo2">Excluir Logo Verso</button>
 
       <h3>Configuração da Folha</h3>
       <label>Largura do cartão (mm): <input type="number" id="largura" value="90"></label>
@@ -33,6 +40,7 @@
       <button type="button" id="btnExportTXT">Exportar TXT</button>
       <input type="file" id="btnImportTXT" accept=".txt">
 
+      <h3>Exportação</h3>
       <button type="button" id="exportar">Exportar PDF</button>
     </form>
 
@@ -51,7 +59,9 @@
     </div>
   </div>
 
+  <!-- Biblioteca jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Script principal -->
   <script src="script.js"></script>
 </body>
 </html>
