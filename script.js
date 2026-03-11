@@ -6,6 +6,32 @@
   });
 });
 
+// Função para remover fundo branco de uma imagem
+function removerFundoBranco(imgSrc, callback) {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] > 240 && data[i+1] > 240 && data[i+2] > 240) {
+        data[i+3] = 0; // torna transparente
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+    callback(canvas.toDataURL("image/png"));
+  };
+  img.src = imgSrc;
+}
+
 // Fundo personalizado
 document.getElementById("bg").addEventListener("change", e => {
   const file = e.target.files[0];
@@ -20,17 +46,19 @@ document.getElementById("bg").addEventListener("change", e => {
   }
 });
 
-// Logos extras
+// Logos extras com remoção de fundo branco
 function carregarLogo(inputId, imgId){
   document.getElementById(inputId).addEventListener("change", e => {
     const file = e.target.files[0];
     if(file){
       const reader = new FileReader();
       reader.onload = () => {
-        const img = document.getElementById(imgId);
-        img.src = reader.result;
-        img.style.display = "block";
-        salvarLocal();
+        removerFundoBranco(reader.result, (novoSrc) => {
+          const img = document.getElementById(imgId);
+          img.src = novoSrc;
+          img.style.display = "block";
+          salvarLocal();
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -182,7 +210,13 @@ document.getElementById("btnImportTXT").addEventListener("change", e => {
 // Carregar dados ao abrir
 window.onload = carregarLocal;
 
-// Exportar PDF frente e verso com fundo e logos
+// Função auxiliar para extrair base64 do background
+function extrairBase64(bgStyle) {
+  if (!bgStyle || bgStyle === "none") return null;
+  return bgStyle.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+}
+
+// Exportar PDF frente e verso
 document.getElementById("exportar").addEventListener("click", () => {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF("p", "mm", "a4");
@@ -206,25 +240,29 @@ document.getElementById("exportar").addEventListener("click", () => {
   const telefone = document.getElementById("telefone").value;
 
   // Imagens
-  const fundoFrente = document.getElementById("frente").style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
-  const fundoVerso = document.getElementById("verso").style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+  const fundoFrente = extrairBase64(document.getElementById("frente").style.backgroundImage);
+  const fundoVerso = extrairBase64(document.getElementById("verso").style.backgroundImage);
   const logo1 = document.getElementById("prevLogo1");
   const logo2 = document.getElementById("prevLogo2");
 
-    // --- Página 1: Frente ---
+  // --- Página 1: Frente ---
   for (let linha = 0; linha < linhas; linha++) {
     for (let coluna = 0; coluna < colunas; coluna++) {
       const x = margemEsq + coluna * larguraCartao;
       const y = margemTopo + linha * alturaCartao;
 
       // Fundo da frente
-      if (fundoFrente && fundoFrente !== "none") {
+      if (fundoFrente) {
         doc.addImage(fundoFrente, "PNG", x, y, larguraCartao, alturaCartao);
       }
 
       // Texto frente
       doc.text(nome, x + 10, y + 20);
-      doc.text(profissao, x + 10, y + 30);
+      // Quebra de linha na profissão
+      const profLinhas = profissao.split("\n");
+      profLinhas.forEach((linhaTexto, idx) => {
+        doc.text(linhaTexto, x + 10, y + 30 + (idx * 6));
+      });
 
       // Logo 1 (frente)
       if (logo1.src) {
@@ -243,7 +281,7 @@ document.getElementById("exportar").addEventListener("click", () => {
       const y = margemTopo + linha * alturaCartao + offsetY;
 
       // Fundo do verso
-      if (fundoVerso && fundoVerso !== "none") {
+      if (fundoVerso) {
         doc.addImage(fundoVerso, "PNG", x, y, larguraCartao, alturaCartao);
       }
 
@@ -263,4 +301,3 @@ document.getElementById("exportar").addEventListener("click", () => {
   // Salvar PDF
   doc.save("cartoes.pdf");
 });
-
