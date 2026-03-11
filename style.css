@@ -72,10 +72,25 @@ button:hover {
   cursor: move;
 }
 
-/* Preview da profissão respeitando Enter */
+/* Ajustes de preview */
+#prevNome {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px; /* espaço entre nome e profissão */
+}
+
 #prevProfissao {
   white-space: pre-line;   /* respeita quebras de linha */
   word-wrap: break-word;   /* quebra palavras longas */
   text-align: center;
-  margin-top: 5px;
+  margin-top: 0;           /* remove espaço extra */
+  font-size: 14px;
+  color: #333;
+}
+
+#prevEmail,
+#prevTelefone {
+  font-size: 13px;
+  margin: 2px 0;
+  color: #444;
 }
