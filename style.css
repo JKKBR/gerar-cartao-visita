@@ -23,6 +23,16 @@ form label {
   margin-bottom: 10px;
 }
 
+/* Aqui você adiciona a regra para o campo de profissão */
+#profissao {
+  width: 100%;        /* ocupa toda a largura do formulário */
+  height: 60px;       /* altura maior para caber mais texto */
+  resize: none;       /* impede redimensionamento manual */
+  text-align: center; /* centraliza o texto dentro da caixa */
+  font-size: 14px;
+}
+
+
 button {
   margin-top: 15px;
   padding: 10px;
@@ -58,3 +68,4 @@ button {
 .draggable {
   cursor: move;
 }
+
