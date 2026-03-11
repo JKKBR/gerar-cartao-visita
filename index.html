@@ -14,8 +14,8 @@
       <label>Email: <input type="text" id="email"></label>
       <label>Telefone: <input type="text" id="telefone"></label>
       <label>Imagem de Fundo: <input type="file" id="bg" accept="image/*"></label>
-      <label>Logo 1: <input type="file" id="logo1" accept="image/*"></label>
-      <label>Logo 2: <input type="file" id="logo2" accept="image/*"></label>
+      <label>Logo Frente: <input type="file" id="logo1" accept="image/*"></label>
+      <label>Logo Verso: <input type="file" id="logo2" accept="image/*"></label>
 
       <h3>Configuração da Folha</h3>
       <label>Largura do cartão (mm): <input type="number" id="largura" value="90"></label>
@@ -41,12 +41,12 @@
       <div class="cartao frente" id="frente">
         <h1 id="prevNome"></h1>
         <p id="prevProfissao"></p>
-        <img id="prevLogo1" class="draggable" style="max-width:80px; max-height:80px; position:absolute;">
-        <img id="prevLogo2" class="draggable" style="max-width:80px; max-height:80px; position:absolute;">
+        <img id="prevLogo1" class="draggable" style="position:absolute; max-width:80px; max-height:80px;">
       </div>
       <div class="cartao verso" id="verso">
         <p id="prevEmail"></p>
         <p id="prevTelefone"></p>
+        <img id="prevLogo2" class="draggable" style="position:absolute; max-width:80px; max-height:80px;">
       </div>
     </div>
   </div>
