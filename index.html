@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerador de Cartão de Visita</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <form id="formCartao">
+      <h2>Dados do Cartão</h2>
+      <label>Nome: <input type="text" id="nome"></label>
+      <label>Profissão: <input type="text" id="profissao"></label>
+      <label>Email: <input type="text" id="email"></label>
+      <label>Telefone: <input type="text" id="telefone"></label>
+      <label>Imagem de Fundo: <input type="file" id="bg" accept="image/*"></label>
+      <label>Logo/Imagem extra: <input type="file" id="logo" accept="image/*"></label>
+
+      <h3>Configuração da Folha</h3>
+      <label>Largura do cartão (mm): <input type="number" id="largura" value="90"></label>
+      <label>Altura do cartão (mm): <input type="number" id="altura" value="50"></label>
+      <label>Colunas: <input type="number" id="colunas" value="3"></label>
+      <label>Linhas: <input type="number" id="linhas" value="4"></label>
+      <label>Margem esquerda (mm): <input type="number" id="margemEsq" value="10"></label>
+      <label>Margem topo (mm): <input type="number" id="margemTopo" value="10"></label>
+
+      <button type="button" id="exportar">Exportar PDF</button>
+    </form>
+
+    <div class="preview">
+      <h2>Preview</h2>
+      <div class="cartao frente" id="frente">
+        <h1 id="prevNome"></h1>
+        <p id="prevProfissao"></p>
+      </div>
+      <div class="cartao verso" id="verso">
+        <p id="prevEmail"></p>
+        <p id="prevTelefone"></p>
+        <img id="prevLogo" style="max-width:80px; max-height:80px;">
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
