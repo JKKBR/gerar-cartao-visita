@@ -218,86 +218,84 @@ function extrairBase64(bgStyle) {
 
 // Exportar PDF frente e verso
 document.getElementById("exportar").addEventListener("click", () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF("p", "mm", "a4");
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF("p", "mm", "a4");
 
-  // Configurações da folha
-  const larguraCartao = parseFloat(document.getElementById("largura").value);
-  const alturaCartao = parseFloat(document.getElementById("altura").value);
-  const colunas = parseInt(document.getElementById("colunas").value);
-  const linhas = parseInt(document.getElementById("linhas").value);
-  const margemEsq = parseFloat(document.getElementById("margemEsq").value);
-  const margemTopo = parseFloat(document.getElementById("margemTopo").value);
+    // Configurações da folha
+    const larguraCartao = parseFloat(document.getElementById("largura").value);
+    const alturaCartao = parseFloat(document.getElementById("altura").value);
+    const colunas = parseInt(document.getElementById("colunas").value);
+    const linhas = parseInt(document.getElementById("linhas").value);
+    const margemEsq = parseFloat(document.getElementById("margemEsq").value);
+    const margemTopo = parseFloat(document.getElementById("margemTopo").value);
 
-  // Ajuste do verso
-  const offsetX = parseFloat(document.getElementById("offsetX").value);
-  const offsetY = parseFloat(document.getElementById("offsetY").value);
+    // Ajuste do verso
+    const offsetX = parseFloat(document.getElementById("offsetX").value);
+    const offsetY = parseFloat(document.getElementById("offsetY").value);
 
-  // Dados do cartão
-  const nome = document.getElementById("nome").value;
-  const profissao = document.getElementById("profissao").value;
-  const email = document.getElementById("email").value;
-  const telefone = document.getElementById("telefone").value;
+    // Dados do cartão
+    const nome = document.getElementById("nome").value;
+    const profissao = document.getElementById("profissao").value;
+    const email = document.getElementById("email").value;
+    const telefone = document.getElementById("telefone").value;
 
-  // Imagens
-  const fundoFrente = extrairBase64(document.getElementById("frente").style.backgroundImage);
-  const fundoVerso = extrairBase64(document.getElementById("verso").style.backgroundImage);
-  const logo1 = document.getElementById("prevLogo1");
-  const logo2 = document.getElementById("prevLogo2");
+    // Imagens
+    const fundoFrente = extrairBase64(document.getElementById("frente").style.backgroundImage);
+    const fundoVerso = extrairBase64(document.getElementById("verso").style.backgroundImage);
+    const logo1 = document.getElementById("prevLogo1");
+    const logo2 = document.getElementById("prevLogo2");
 
-  // --- Página 1: Frente ---
-  for (let linha = 0; linha < linhas; linha++) {
-    for (let coluna = 0; coluna < colunas; coluna++) {
-      const x = margemEsq + coluna * larguraCartao;
-      const y = margemTopo + linha * alturaCartao;
+    // --- Página 1: Frente ---
+    for (let linha = 0; linha < linhas; linha++) {
+      for (let coluna = 0; coluna < colunas; coluna++) {
+        const x = margemEsq + coluna * larguraCartao;
+        const y = margemTopo + linha * alturaCartao;
 
-      // Fundo da frente
-      if (fundoFrente) {
-        doc.addImage(fundoFrente, "PNG", x, y, larguraCartao, alturaCartao);
-      }
+        if (fundoFrente) {
+          doc.addImage(fundoFrente, "PNG", x, y, larguraCartao, alturaCartao);
+        }
 
-      // Texto frente
-      doc.text(nome, x + 10, y + 20);
-      // Quebra de linha na profissão
-      const profLinhas = profissao.split("\n");
-      profLinhas.forEach((linhaTexto, idx) => {
-        doc.text(linhaTexto, x + 10, y + 30 + (idx * 6));
-      });
+        doc.text(nome, x + 10, y + 20);
 
-      // Logo 1 (frente)
-      if (logo1.src) {
-        const posX = x + (parseInt(logo1.style.left) || 0);
-        const posY = y + (parseInt(logo1.style.top) || 0);
-        doc.addImage(logo1.src, "PNG", posX, posY, 20, 20);
-      }
-    }
-  }
+        const profLinhas = profissao.split("\n");
+        profLinhas.forEach((linhaTexto, idx) => {
+          doc.text(linhaTexto, x + 10, y + 30 + (idx * 6));
+        });
 
-  // --- Página 2: Verso ---
-  doc.addPage();
-  for (let linha = 0; linha < linhas; linha++) {
-    for (let coluna = 0; coluna < colunas; coluna++) {
-      const x = margemEsq + coluna * larguraCartao + offsetX;
-      const y = margemTopo + linha * alturaCartao + offsetY;
-
-      // Fundo do verso
-      if (fundoVerso) {
-        doc.addImage(fundoVerso, "PNG", x, y, larguraCartao, alturaCartao);
-      }
-
-      // Texto verso
-      doc.text(email, x + 10, y + 20);
-      doc.text(telefone, x + 10, y + 30);
-
-      // Logo 2 (verso)
-      if (logo2.src) {
-        const posX = x + (parseInt(logo2.style.left) || 0);
-        const posY = y + (parseInt(logo2.style.top) || 0);
-        doc.addImage(logo2.src, "PNG", posX, posY, 20, 20);
+        if (logo1.src) {
+          const posX = x + (parseInt(logo1.style.left) || 0);
+          const posY = y + (parseInt(logo1.style.top) || 0);
+          doc.addImage(logo1.src, "PNG", posX, posY, 20, 20);
+        }
       }
     }
-  }
 
-  // Salvar PDF
-  doc.save("cartoes.pdf");
+    // --- Página 2: Verso ---
+    doc.addPage();
+    for (let linha = 0; linha < linhas; linha++) {
+      for (let coluna = 0; coluna < colunas; coluna++) {
+        const x = margemEsq + coluna * larguraCartao + offsetX;
+        const y = margemTopo + linha * alturaCartao + offsetY;
+
+        if (fundoVerso) {
+          doc.addImage(fundoVerso, "PNG", x, y, larguraCartao, alturaCartao);
+        }
+
+        doc.text(email, x + 10, y + 20);
+        doc.text(telefone, x + 10, y + 30);
+
+        if (logo2.src) {
+          const posX = x + (parseInt(logo2.style.left) || 0);
+          const posY = y + (parseInt(logo2.style.top) || 0);
+          doc.addImage(logo2.src, "PNG", posX, posY, 20, 20);
+        }
+      }
+    }
+
+    doc.save("cartoes.pdf");
+  } catch (err) {
+    alert("Erro ao gerar PDF: " + err.message);
+    console.error(err);
+  }
 });
