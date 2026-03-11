@@ -148,6 +148,31 @@ function importarTXT(file) {
   reader.readAsText(file);
 }
 
+// Excluir fundo
+document.getElementById("btnExcluirFundo").addEventListener("click", () => {
+  document.getElementById("frente").style.backgroundImage = "";
+  document.getElementById("verso").style.backgroundImage = "";
+  salvarLocal();
+});
+
+// Excluir logo frente
+document.getElementById("btnExcluirLogo1").addEventListener("click", () => {
+  const logo1 = document.getElementById("prevLogo1");
+  logo1.src = "";
+  logo1.style.left = "0px";
+  logo1.style.top = "0px";
+  salvarLocal();
+});
+
+// Excluir logo verso
+document.getElementById("btnExcluirLogo2").addEventListener("click", () => {
+  const logo2 = document.getElementById("prevLogo2");
+  logo2.src = "";
+  logo2.style.left = "0px";
+  logo2.style.top = "0px";
+  salvarLocal();
+});
+
 // Eventos TXT
 document.getElementById("btnExportTXT").addEventListener("click", exportarTXT);
 document.getElementById("btnImportTXT").addEventListener("change", e => {
@@ -238,3 +263,4 @@ document.getElementById("exportar").addEventListener("click", () => {
   // Salvar PDF
   doc.save("cartoes.pdf");
 });
+
