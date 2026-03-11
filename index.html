@@ -14,7 +14,8 @@
       <label>Email: <input type="text" id="email"></label>
       <label>Telefone: <input type="text" id="telefone"></label>
       <label>Imagem de Fundo: <input type="file" id="bg" accept="image/*"></label>
-      <label>Logo/Imagem extra: <input type="file" id="logo" accept="image/*"></label>
+      <label>Logo 1: <input type="file" id="logo1" accept="image/*"></label>
+      <label>Logo 2: <input type="file" id="logo2" accept="image/*"></label>
 
       <h3>Configuração da Folha</h3>
       <label>Largura do cartão (mm): <input type="number" id="largura" value="90"></label>
@@ -24,6 +25,14 @@
       <label>Margem esquerda (mm): <input type="number" id="margemEsq" value="10"></label>
       <label>Margem topo (mm): <input type="number" id="margemTopo" value="10"></label>
 
+      <h3>Ajuste do Verso</h3>
+      <label>Deslocamento X (mm): <input type="number" id="offsetX" value="0"></label>
+      <label>Deslocamento Y (mm): <input type="number" id="offsetY" value="0"></label>
+
+      <h3>Salvar/Carregar Dados</h3>
+      <button type="button" id="btnExportTXT">Exportar TXT</button>
+      <input type="file" id="btnImportTXT" accept=".txt">
+
       <button type="button" id="exportar">Exportar PDF</button>
     </form>
 
@@ -32,11 +41,12 @@
       <div class="cartao frente" id="frente">
         <h1 id="prevNome"></h1>
         <p id="prevProfissao"></p>
+        <img id="prevLogo1" class="draggable" style="max-width:80px; max-height:80px; position:absolute;">
+        <img id="prevLogo2" class="draggable" style="max-width:80px; max-height:80px; position:absolute;">
       </div>
       <div class="cartao verso" id="verso">
         <p id="prevEmail"></p>
         <p id="prevTelefone"></p>
-        <img id="prevLogo" style="max-width:80px; max-height:80px;">
       </div>
     </div>
   </div>
